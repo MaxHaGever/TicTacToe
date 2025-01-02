@@ -124,10 +124,12 @@ class MainActivity : AppCompatActivity() {
             return
         if(currentTurn == Turn.Oes){
             button.text = Oes
+            button.setTextColor(resources.getColor(R.color.colorO))
             currentTurn = Turn.Xes
         }
         else if(currentTurn == Turn.Xes){
             button.text = Xes
+            button.setTextColor(resources.getColor(R.color.colorX))
             currentTurn = Turn.Oes
         }
         setTurnLabel()
