@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -45,6 +46,77 @@ class MainActivity : AppCompatActivity() {
         if(view !is Button)
             return
         addToBoard(view)
+
+        if(checkForVictory(Oes)){
+            result("O Won")
+        }
+
+        if(checkForVictory(Xes)){
+            result("X Won")
+        }
+
+        if(fullBoard()){
+            result("Draw")
+        }
+    }
+
+    private fun checkForVictory(s: String): Boolean {
+
+        if(match(binding.a1,s) && match(binding.a2,s) && match(binding.a3,s))
+            return true
+        if(match(binding.b1,s) && match(binding.b2,s) && match(binding.b3,s))
+            return true
+        if(match(binding.c1,s) && match(binding.c2,s) && match(binding.c3,s))
+            return true
+
+        if(match(binding.a1,s) && match(binding.b1,s) && match(binding.c1,s))
+            return true
+        if(match(binding.a2,s) && match(binding.b2,s) && match(binding.c2,s))
+            return true
+        if(match(binding.a3,s) && match(binding.b3,s) && match(binding.c3,s))
+            return true
+
+        if(match(binding.a1,s) && match(binding.b2,s) && match(binding.c3,s))
+            return true
+        if(match(binding.a3,s) && match(binding.b2,s) && match(binding.c1,s))
+            return true
+
+        return false
+    }
+
+    private fun match(button: Button, symbol: String) = button.text == symbol
+
+    private fun result(title: String) {
+        AlertDialog.Builder(this)
+            .setTitle(title)
+            .setPositiveButton("Reset"){
+                _,_->
+                resetBoard()
+            }
+            .setCancelable(false)
+            .show()
+
+    }
+
+    private fun resetBoard() {
+        for(button in boardList){
+            button.text = ""
+        }
+        if(firstTurn == Turn.Oes)
+            firstTurn = Turn.Xes
+        else if(firstTurn == Turn.Xes)
+            firstTurn = Turn.Oes
+
+        currentTurn = firstTurn
+        setTurnLabel()
+    }
+
+    private fun fullBoard(): Boolean {
+        for(button in boardList){
+            if(button.text == "")
+                return false
+        }
+        return true
     }
 
     private fun addToBoard(button: Button) {
